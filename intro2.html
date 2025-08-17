@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Math Escape Room Project</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blood-red: #8B0000;
+    --blood-glow: rgba(200,0,0,0.6);
+    --dark-bg: #050505;
+    --panel-bg: rgba(0,0,0,0.7);
+    --accent: #FF3B3B;
+  }
+  html,body { height:100%; margin:0; font-family: Arial, Helvetica, sans-serif; background:#000; color:#eee; background-image: url("https://scontent.fmnl44-1.fna.fbcdn.net/v/t1.15752-9/530214340_783183360830007_2387906093181165520_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=101&ccb=1-7&_nc_sid=0024fc&_nc_ohc=Xu-QhyrbGvQQ7kNvwFc5IZq&_nc_oc=AdnDn7_SHQvMHkmu3pd3ZdTlCPoTAAH0eeHn9oj5EprEww8ZPS2g-ITDjTJ9JC83Jd63dCSJaRb_DRYOKKdI6rEC&_nc_ad=z-m&_nc_cid=5917&_nc_zt=23&_nc_ht=scontent.fmnl44-1.fna&oh=03_Q7cD3AGyOQIfFsjOgp5Fl7KjDw-BmTW5qo6lBMf8UF329uE40A&oe=68C9CC62"); background-size: cover; background-position: center;}
+  body { overflow:hidden; }
+
+  /* Fullscreen background image container per section */
+  .bg {
+    position:fixed; inset:0; z-index:-100; background-size:cover; background-position:center; transition: background 0.7s ease;
+    filter: brightness(0.5);
+  }
+
+  /* central stage */
+  .stage {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    box-sizing:border-box;
+  }
+
+  .card {
+    width:92%;
+    max-width:960px;
+    background: var(--panel-bg);
+    border-radius:14px;
+    padding:22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,0,0,0.03);
+    color: #fff;
+  }
+
+  /* Scary bloody headers */
+  h1.title {
+    font-family: 'Creepster', cursive;
+    color: var(--accent);
+    font-size:48px;
+    margin:6px 0 4px 0;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.9), 0 0 14px rgba(255,0,0,0.25);
+    letter-spacing:1px;
+  }
+  h2, h3 {
+    font-family: 'Nosifer', cursive, 'Creepster', cursive;
+    color: var(--accent);
+    text-shadow: 0 3px 6px rgba(0,0,0,0.9);
+    margin:8px 0;
+  }
+  p.lead {
+    font-size:18px;
+    color:#f1e7e7;
+    line-height:1.4;
+  }
+
+  /* Bloody buttons */
+  .bloody-btn {
+    display:inline-block;
+    padding:12px 22px;
+    margin:12px 8px 0 8px;
+    border-radius:10px;
+    background: linear-gradient(180deg,#550000 0%, #120000 100%);
+    border: 2px solid #8b0000;
+    box-shadow: 0 6px 25px rgba(139,0,0,0.45), inset 0 -6px 12px rgba(255,0,0,0.08);
+    color:#fff;
+    font-family: 'Creepster', cursive;
+    font-size:18px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .bloody-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(255,0,0,0.45); }
+
+  /* Popups in bloody bubble frame */
+  .popup {
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    z-index: 9999;
+    background: linear-gradient(180deg, rgba(10,10,10,0.98), rgba(0,0,0,0.9));
+    border-radius: 18px;
+    border: 6px solid rgba(100,0,0,0.9);
+    padding: 18px;
+    width: min(880px, 90%);
+    max-height: 80%;
+    overflow:auto;
+    display:none;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.9), 0 0 60px rgba(139,0,0,0.12);
+  }
+  .popup .bubble {
+    background: rgba(20,0,0,0.55);
+    border-radius: 12px;
+    padding: 12px;
+    color: #fff;
+    border: 2px solid rgba(255,0,0,0.12);
+    font-size:18px;
+  }
+  .popup h3 { font-family:'Creepster', cursive; color:var(--accent); margin:0 0 8px 0; }
+
+  /* Small utility */
+  .hidden { display:none !important; }
+  .center { text-align:center; }
+
+  /* Section headers animation */
+  .animated-header { opacity:0; transform: translateY(20px); transition: all 0.6s ease; }
+  .animated-header.show { opacity:1; transform: translateY(0); }
+
+  /* fuse mini-game layout */
+  .mini-game {
+    display:flex; gap:18px; align-items:flex-start; justify-content:center; flex-wrap:wrap;
+  }
+  .fuses-area, .sockets-area {
+    width:420px;
+    min-height:220px;
+    border-radius:12px;
+    padding:12px;
+    background: rgba(0,0,0,0.44);
+    border: 2px dashed rgba(255,0,0,0.08);
+  }
+  .fuse {
+    width:160px;
+    height:28px;
+    line-height:28px;
+    margin:10px;
+    border-radius:6px;
+    padding-left:10px;
+    color:#fff;
+    font-weight:bold;
+    cursor:grab;
+    user-select:none;
+  }
+  .socket {
+    width:180px; height:28px; border-radius:6px; margin:15px; background:rgba(255,255,255,0.04);
+    border:2px solid rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center;
+    color:#ddd; font-weight:bold;
+  }
+  .fuse.red { background: linear-gradient(90deg, #a30000, #7b0000); box-shadow: 0 6px 20px rgba(163,0,0,0.2); }
+  .fuse.green { background: linear-gradient(90deg, #0f7b1a, #075e12); box-shadow: 0 6px 20px rgba(0,150,50,0.15); }
+  .fuse.blue { background: linear-gradient(90deg, #0b4f7b, #05324c); box-shadow: 0 6px 20px rgba(0,120,200,0.12); }
+  .fuse.yellow { background: linear-gradient(90deg, #8b6b00, #6b4d00); box-shadow: 0 6px 20px rgba(200,160,0,0.12); }
+  .fuse.purple { background: linear-gradient(90deg, #5b0d5b, #3a063a); box-shadow: 0 6px 20px rgba(120,40,120,0.12); }
+
+  /* connected state */
+  .socket.connected { background: rgba(255,255,255,0.06); border-color: rgba(0,255,0,0.15); color: #e0ffd8; }
+
+  /* table puzzle */
+  .puzzle-table { width:100%; border-collapse:collapse; margin-top:12px; }
+  .puzzle-table td, .puzzle-table th { padding:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.45); color:#fff; }
+  .puzzle-table input[type="text"] { width:100%; padding:6px; font-size:16px; border-radius:6px; border:2px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff; }
+  .small { font-size:14px; color:#ddd; }
+
+  /* shaking animation for wrong answers */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+  }
+  .shake { animation: shake 0.6s; }
+
+  /* booklet */
+  .booklet { display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .book {
+    width:320px; height:340px; background:linear-gradient(180deg,#1a0b0b,#0c0505); border-radius:10px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:4px solid rgba(120,0,0,0.6);
+  }
+  .page {
+    width:280px; height:240px; background: rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; border-radius:8px;
+    color:#fff; font-size:40px; font-family:'Creepster', cursive; text-shadow:0 2px 8px rgba(0,0,0,0.9);
+  }
+  .book-controls { display:flex; gap:8px; margin-top:8px; }
+
+  /* wheel safe */
+  .wheel-wrap { display:flex; gap:24px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .wheel {
+    width:260px; height:260px; border-radius:50%; background: linear-gradient(180deg,#0b0b0b,#1a0b0b); border:6px solid rgba(80,0,0,0.6); position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wheel .slot { position:absolute; width:72px; height:72px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; border-radius:8px; background: rgba(255,255,255,0.02); border:2px solid rgba(255,255,255,0.04); }
+  /* place 9 slots around circle */
+  .s1 { transform: translate(-130px,-0px); left:50%; top:50%; }
+  .s2 { transform: translate(-90px,-95px); left:50%; top:50%; }
+  .s3 { transform: translate(-10px,-125px); left:50%; top:50%; }
+  .s4 { transform: translate(70px,-95px); left:50%; top:50%; }
+  .s5 { transform: translate(110px,0px); left:50%; top:50%; }
+  .s6 { transform: translate(70px,95px); left:50%; top:50%; }
+  .s7 { transform: translate(-10px,125px); left:50%; top:50%; }
+  .s8 { transform: translate(-90px,95px); left:50%; top:50%; }
+  .s9 { transform: translate(-150px,60px); left:50%; top:50%; }
+
+  /* responsive tweaks */
+  @media (max-width:900px){
+    .fuse, .socket { width:120px; }
+    .fuses-area, .sockets-area { width: 95%; }
+    .card { width:95%; padding:16px; }
+    .wheel { width:210px; height:210px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bg" class="bg" );"></div>
+
+<div class="stage">
+  <div id="mainCard" class="card">
+    <!-- We'll inject sections here -->
+    <div class="left"><button class="bloody-btn" onclick="history.back()")">&larr;</button></div>
+      <h2>Introduction</h2>
+      <div class="popup-panel bubble">
+        <p>You have reached the main door. There are no other entrance since the windows are well-barricaded. You saw a pass lock at the main door and there is a note near the door. You suspected that this maybe the code that you need for the pass lock.</p>
+      </div>
+      <div style="margin-top:14px;" class="center">
+        <button class="bloody-btn" onclick="openPopup('notePopup')">Note</button>
+        <button class="bloody-btn" onclick="openPopup('lockPopup')">Pass Lock</button>
+      </div>
+
+    </div>
+
+
+    <!-- Introduction with Note & Lock -->
+    <div id="intro2" class="hidden">
+     <div class="left"><button class="bloody-btn" onclick="goToSection('intro1')">&larr;</button></div>
+      <h2>Introduction</h2>
+      <div class="popup-panel bubble">
+        <p>You have reached the main door. There are no other entrance since the windows are well-barricaded. You saw a pass lock at the main door and there is a note near the door. You suspected that this maybe the code that you need for the pass lock.</p>
+      </div>
+      <div style="margin-top:14px;" class="center">
+        <button class="bloody-btn" onclick="openPopup('notePopup')">Note</button>
+        <button class="bloody-btn" onclick="openPopup('lockPopup')">Pass Lock</button>
+      </div>
+    </div>
+
+    <!-- NOTE POPUP -->
+<div id="notePopup" class="popup">
+  <h3>Note</h3>
+  <div class="bubble">
+    The note says: <br><br>
+    <b>"This is the sign used to denote the summation of all terms in a sequence."</b>
+  </div>
+  <div class="center"><button class="bloody-btn" onclick="closePopup('notePopup')">Close</button></div>
+</div>
+
+<!-- LOCK POPUP -->
+<div id="lockPopup" class="popup">
+  <h3>Pass Lock</h3>
+  <div class="bubble center" style="margin-bottom:12px;">
+    Choose the symbol which matches the clue.
+  </div>
+  <div class="center">
+    <button class="bloody-btn" onclick="lockWrong('GO AWAY!')">π</button>
+    <button class="bloody-btn" onclick="lockWrong('YOU HAVE NO CHANCE!')">Ω</button>
+    <button class="bloody-btn" onclick="lockRight()">Σ</button>
+  </div>
+  <div class="center" style="margin-top:10px;"><button class="bloody-btn" onclick="closePopup('lockPopup')">Close</button></div>
+</div>
+
+<!-- LOCK WRONG / RIGHT POPUP -->
+<div id="lockWrongPopup" class="popup">
+  <h3 id="lockWrongMsg" style="color:red"></h3>
+  <div class="center"><button class="bloody-btn" onclick="closePopup('lockWrongPopup')">Close</button></div>
+</div>
+
+<div id="lockRightPopup" class="popup">
+  <h3 style="color:lightgreen">Luck? maybe...</h3>
+  <div class="center"><button class="bloody-btn" onclick="closePopup('lockRightPopup'); proceedAfterLock()">Proceed</button></div>
+</div>
+
+
+</div>
+
+<script>
+/* ---------- Global state ---------- */
+let currentSection = 'title';
+const bg = document.getElementById('bg');
+
+/* helper to change visible section and background */
+function hideAllSections(){
+  document.querySelectorAll('#mainCard > div').forEach(d => d.classList.add('hidden'));
+}
+function goToSection(id){
+  hideAllSections();
+  document.getElementById(id).classList.remove('hidden');
+  currentSection = id;
+  // change background per section
+  switch(id){
+    case 'intro1': bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+    case 'intro2': bg.style.backgroundImage = "url('https://i.ibb.co/Z6b0rZb/abandoned-door.jpg')"; break;
+    case 'afterLock': bg.style.backgroundImage = "url('https://i.ibb.co/Mc8fK0n/wooden-door.jpg')"; break;
+    case 'section1': bg.style.backgroundImage = "url('https://i.ibb.co/9yqkP8V/low-light-entrance.jpg')"; setTimeout(()=>document.getElementById('animatedH').classList.add('show'),150); break;
+    case 'basementIntro': bg.style.backgroundImage = "url('https://i.ibb.co/9H0sG4Y/basement.jpg')"; break;
+    case 'postfuses': bg.style.backgroundImage = "url('https://i.ibb.co/qkSJQ9t/basement-lit.jpg')"; break;
+    case 'cabinetIntro': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetPuzzle': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetAfter': bg.style.backgroundImage = "url('https://i.ibb.co/8K5Qy3G/cabinet-open.jpg')"; break;
+    case 'upstairs': bg.style.backgroundImage = "url('https://i.ibb.co/7W7yV6s/hallway.jpg')"; break;
+    default: bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+  }
+}
+
+/* popup control */
+function openPopup(id){ document.getElementById(id).style.display = 'block'; }
+function closePopup(id){ document.getElementById(id).style.display = 'none'; }
+
+/* ---------- LOCK logic ---------- */
+function lockWrong(msg){
+  closePopup('lockPopup');
+  document.getElementById('lockWrongMsg').innerText = msg;
+  openPopup('lockWrongPopup');
+}
+function lockRight(){
+  closePopup('lockPopup');
+  openPopup('lockRightPopup');
+}
+function proceedAfterLock(){
+  closePopup('lockRightPopup');
+  window.location.href ='section1.html';
+}
+
+
+
+</script>
+</body>
+</html>

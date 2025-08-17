@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Math Escape Room Project</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blood-red: #8B0000;
+    --blood-glow: rgba(200,0,0,0.6);
+    --dark-bg: #050505;
+    --panel-bg: rgba(0,0,0,0.7);
+    --accent: #FF3B3B;
+  }
+  html,body { height:100%; margin:0; font-family: Arial, Helvetica, sans-serif; background:#000; color:#eee; background-image: url("data:image/jpeg;base64,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"); background-size: cover; background-position: center;}
+  body { overflow:hidden; }
+
+  /* Fullscreen background image container per section */
+  .bg {
+    position:fixed; inset:0; z-index:-100; background-size:cover; background-position:center; transition: background 0.7s ease;
+    filter: brightness(0.5);
+  }
+
+  /* central stage */
+  .stage {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    box-sizing:border-box;
+  }
+
+  .card {
+    width:92%;
+    max-width:960px;
+    background: var(--panel-bg);
+    border-radius:14px;
+    padding:22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,0,0,0.03);
+    color: #fff;
+  }
+
+  /* Scary bloody headers */
+  h1.title {
+    font-family: 'Creepster', cursive;
+    color: var(--accent);
+    font-size:48px;
+    margin:6px 0 4px 0;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.9), 0 0 14px rgba(255,0,0,0.25);
+    letter-spacing:1px;
+  }
+  h2, h3 {
+    font-family: 'Nosifer', cursive, 'Creepster', cursive;
+    color: var(--accent);
+    text-shadow: 0 3px 6px rgba(0,0,0,0.9);
+    margin:8px 0;
+  }
+  p.lead {
+    font-size:18px;
+    color:#f1e7e7;
+    line-height:1.4;
+  }
+
+  /* Bloody buttons */
+  .bloody-btn {
+    display:inline-block;
+    padding:12px 22px;
+    margin:12px 8px 0 8px;
+    border-radius:10px;
+    background: linear-gradient(180deg,#550000 0%, #120000 100%);
+    border: 2px solid #8b0000;
+    box-shadow: 0 6px 25px rgba(139,0,0,0.45), inset 0 -6px 12px rgba(255,0,0,0.08);
+    color:#fff;
+    font-family: 'Creepster', cursive;
+    font-size:18px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .bloody-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(255,0,0,0.45); }
+
+  /* Popups in bloody bubble frame */
+  .popup {
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    z-index: 9999;
+    background: linear-gradient(180deg, rgba(10,10,10,0.98), rgba(0,0,0,0.9));
+    border-radius: 18px;
+    border: 6px solid rgba(100,0,0,0.9);
+    padding: 18px;
+    width: min(880px, 90%);
+    max-height: 80%;
+    overflow:auto;
+    display:none;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.9), 0 0 60px rgba(139,0,0,0.12);
+  }
+  .popup .bubble {
+    background: rgba(20,0,0,0.55);
+    border-radius: 12px;
+    padding: 12px;
+    color: #fff;
+    border: 2px solid rgba(255,0,0,0.12);
+    font-size:18px;
+  }
+  .popup h3 { font-family:'Creepster', cursive; color:var(--accent); margin:0 0 8px 0; }
+
+  /* Small utility */
+  .hidden { display:none !important; }
+  .center { text-align:center; }
+
+  /* Section headers animation */
+  .animated-header { opacity:0; transform: translateY(20px); transition: all 0.6s ease; }
+  .animated-header.show { opacity:1; transform: translateY(0); }
+
+  /* fuse mini-game layout */
+  .mini-game {
+    display:flex; gap:18px; align-items:flex-start; justify-content:center; flex-wrap:wrap;
+  }
+  .fuses-area, .sockets-area {
+    width:420px;
+    min-height:220px;
+    border-radius:12px;
+    padding:12px;
+    background: rgba(0,0,0,0.44);
+    border: 2px dashed rgba(255,0,0,0.08);
+  }
+  .fuse {
+    width:160px;
+    height:28px;
+    line-height:28px;
+    margin:10px;
+    border-radius:6px;
+    padding-left:10px;
+    color:#fff;
+    font-weight:bold;
+    cursor:grab;
+    user-select:none;
+  }
+  .socket {
+    width:180px; height:28px; border-radius:6px; margin:15px; background:rgba(255,255,255,0.04);
+    border:2px solid rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center;
+    color:#ddd; font-weight:bold;
+  }
+  .fuse.red { background: linear-gradient(90deg, #a30000, #7b0000); box-shadow: 0 6px 20px rgba(163,0,0,0.2); }
+  .fuse.green { background: linear-gradient(90deg, #0f7b1a, #075e12); box-shadow: 0 6px 20px rgba(0,150,50,0.15); }
+  .fuse.blue { background: linear-gradient(90deg, #0b4f7b, #05324c); box-shadow: 0 6px 20px rgba(0,120,200,0.12); }
+  .fuse.yellow { background: linear-gradient(90deg, #8b6b00, #6b4d00); box-shadow: 0 6px 20px rgba(200,160,0,0.12); }
+  .fuse.purple { background: linear-gradient(90deg, #5b0d5b, #3a063a); box-shadow: 0 6px 20px rgba(120,40,120,0.12); }
+
+  /* connected state */
+  .socket.connected { background: rgba(255,255,255,0.06); border-color: rgba(0,255,0,0.15); color: #e0ffd8; }
+
+  /* table puzzle */
+  .puzzle-table { width:100%; border-collapse:collapse; margin-top:12px; }
+  .puzzle-table td, .puzzle-table th { padding:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.45); color:#fff; }
+  .puzzle-table input[type="text"] { width:100%; padding:6px; font-size:16px; border-radius:6px; border:2px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff; }
+  .small { font-size:14px; color:#ddd; }
+
+  /* shaking animation for wrong answers */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+  }
+  .shake { animation: shake 0.6s; }
+
+  /* booklet */
+  .booklet { display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .book {
+    width:320px; height:340px; background:linear-gradient(180deg,#1a0b0b,#0c0505); border-radius:10px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:4px solid rgba(120,0,0,0.6);
+  }
+  .page {
+    width:280px; height:240px; background: rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; border-radius:8px;
+    color:#fff; font-size:40px; font-family:'Creepster', cursive; text-shadow:0 2px 8px rgba(0,0,0,0.9);
+  }
+  .book-controls { display:flex; gap:8px; margin-top:8px; }
+
+  /* wheel safe */
+  .wheel-wrap { display:flex; gap:24px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .wheel {
+    width:260px; height:260px; border-radius:50%; background: linear-gradient(180deg,#0b0b0b,#1a0b0b); border:6px solid rgba(80,0,0,0.6); position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wheel .slot { position:absolute; width:72px; height:72px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; border-radius:8px; background: rgba(255,255,255,0.02); border:2px solid rgba(255,255,255,0.04); }
+  /* place 9 slots around circle */
+  .s1 { transform: translate(-130px,-0px); left:50%; top:50%; }
+  .s2 { transform: translate(-90px,-95px); left:50%; top:50%; }
+  .s3 { transform: translate(-10px,-125px); left:50%; top:50%; }
+  .s4 { transform: translate(70px,-95px); left:50%; top:50%; }
+  .s5 { transform: translate(110px,0px); left:50%; top:50%; }
+  .s6 { transform: translate(70px,95px); left:50%; top:50%; }
+  .s7 { transform: translate(-10px,125px); left:50%; top:50%; }
+  .s8 { transform: translate(-90px,95px); left:50%; top:50%; }
+  .s9 { transform: translate(-150px,60px); left:50%; top:50%; }
+
+  /* responsive tweaks */
+  @media (max-width:900px){
+    .fuse, .socket { width:120px; }
+    .fuses-area, .sockets-area { width: 95%; }
+    .card { width:95%; padding:16px; }
+    .wheel { width:210px; height:210px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bg" class="bg" );"></div>
+
+<div class="stage">
+  <div id="mainCard" class="card">
+    <!-- Upstairs -->
+    <div id="upstairs">
+      <div class="left"><button class="bloody-btn" onclick="history.back()">&larr;</button></div>
+      <p class="lead">You are now at the bookshelf, but you don’t see any lock that requires a key. While searching, you notice a book that looks like a lever, so you pull it. The bookshelf opens, revealing a hidden room beneath. The key fits perfectly into the door lock.</p>
+      <div class="center"><button class="bloody-btn" onclick="window.location.href ='bookshelfRoom.html'">Proceed</button></div>
+    </div>
+
+<script>
+/* ---------- Global state ---------- */
+let currentSection = 'title';
+const bg = document.getElementById('bg');
+
+/* helper to change visible section and background */
+function hideAllSections(){
+  document.querySelectorAll('#mainCard > div').forEach(d => d.classList.add('hidden'));
+}
+function goToSection(id){
+  hideAllSections();
+  document.getElementById(id).classList.remove('hidden');
+  currentSection = id;
+  // change background per section
+  switch(id){
+    case 'intro1': bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+    case 'intro2': bg.style.backgroundImage = "url('https://i.ibb.co/Z6b0rZb/abandoned-door.jpg')"; break;
+    case 'afterLock': bg.style.backgroundImage = "url('https://i.ibb.co/Mc8fK0n/wooden-door.jpg')"; break;
+    case 'section1': bg.style.backgroundImage = "url('https://i.ibb.co/9yqkP8V/low-light-entrance.jpg')"; setTimeout(()=>document.getElementById('animatedH').classList.add('show'),150); break;
+    case 'basementIntro': bg.style.backgroundImage = "url('https://i.ibb.co/9H0sG4Y/basement.jpg')"; break;
+    case 'postfuses': bg.style.backgroundImage = "url('https://i.ibb.co/qkSJQ9t/basement-lit.jpg')"; break;
+    case 'cabinetIntro': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetPuzzle': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetAfter': bg.style.backgroundImage = "url('https://i.ibb.co/8K5Qy3G/cabinet-open.jpg')"; break;
+    case 'upstairs': bg.style.backgroundImage = "url('https://i.ibb.co/7W7yV6s/hallway.jpg')"; break;
+    default: bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+  }
+}
+
+/* popup control */
+function openPopup(id){ document.getElementById(id).style.display = 'block'; }
+function closePopup(id){ document.getElementById(id).style.display = 'none'; }
+
+/* ---------- LOCK logic ---------- */
+function lockWrong(msg){
+  closePopup('lockPopup');
+  document.getElementById('lockWrongMsg').innerText = msg;
+  openPopup('lockWrongPopup');
+}
+function lockRight(){
+  closePopup('lockPopup');
+  openPopup('lockRightPopup');
+}
+function proceedAfterLock(){
+  closePopup('lockRightPopup');
+  goToSection('afterLock');
+}
+
+/* ---------- fuse drag & mini puzzles ---------- */
+/* map fuse index to puzzle prompt + answers */
+const fusePuzzles = {
+  1: { prompt: "2, 4, _, _, 32. Type the missing two numbers separated by comma", answers: ["8","16"] },
+  2: { prompt: "1, 3, 5, 7, _, _, _. Type the missing three numbers separated by comma", answers: ["9","11","13"] },
+  3: { prompt: "7, 14, 21, _, 35, 42, _. Type the two missing numbers separated by comma", answers: ["28","49"] },
+  4: { prompt: "3, 9, _, _, 243. Type the two missing numbers separated by comma", answers: ["27","81"] },
+  5: { prompt: "81, 72, 63, _, _. Type the two missing numbers separated by comma", answers: ["54","45"] }
+};
+let fuseConnected = { 1:false,2:false,3:false,4:false,5:false };
+
+/* Setup drag events */
+document.querySelectorAll('.fuse').forEach(w=>{
+  w.addEventListener('dragstart', e=>{
+    e.dataTransfer.setData('text/plain', e.target.id);
+  });
+});
+document.querySelectorAll('.socket').forEach(s=>{
+  s.addEventListener('dragover', e=>{
+    e.preventDefault();
+  });
+  s.addEventListener('drop', e=>{
+    e.preventDefault();
+    const fuseId = e.dataTransfer.getData('text/plain');
+    const fuseElem = document.getElementById(fuseId);
+    const socketIndex = e.currentTarget.dataset.socket;
+    // reject if already connected
+    if(e.currentTarget.classList.contains('connected')) return;
+    // show mini puzzle for that fuse
+    const fuseIndex = parseInt(fuseElem.dataset.fuse,10);
+    // start puzzle attempt
+    startfusePuzzle(fuseIndex, socketIndex, fuseElem, e.currentTarget);
+  });
+});
+
+/* fuse puzzle flow */
+let ongoingfuse = null;
+function startfusePuzzle(fuseIndex, socketIndex, fuseElem, socketElem){
+  if(fuseConnected[fuseIndex]) {
+    // already solved
+    return;
+  }
+  ongoingfuse = { fuseIndex, socketIndex, fuseElem, socketElem };
+  const puz = fusePuzzles[fuseIndex];
+  document.getElementById('fusePuzzleTitle').innerText = "Mini Puzzle for fuse " + fuseIndex;
+  document.getElementById('fusePuzzleBody').innerText = puz.prompt;
+  document.getElementById('fuseAnswer').value = '';
+  document.getElementById('fuseMsg').innerText = '';
+  openPopup('fusePuzzlePopup');
+}
+
+/* submit fuse answer */
+function submitfuseAnswer(){
+  const ans = document.getElementById('fuseAnswer').value.trim();
+  if(!ongoingfuse) return;
+  const expected = fusePuzzles[ongoingfuse.fuseIndex].answers;
+  // normalize: split and trim
+  const provided = ans.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+  // require same length and exact numbers
+  if(provided.length !== expected.length){
+    indicatefuseWrong();
+    return;
+  }
+  // check each element numeric equality
+  let ok = true;
+  for(let i=0;i<expected.length;i++){
+    if(provided[i] !== expected[i]) { ok = false; break; }
+  }
+  if(!ok){
+    indicatefuseWrong();
+    return;
+  }
+  // correct: lock fuse in socket
+  closePopup('fusePuzzlePopup');
+  lockfuseIntoSocket(ongoingfuse.fuseElem, ongoingfuse.socketElem, ongoingfuse.fuseIndex);
+  ongoingfuse = null;
+  // check if all fuses connected
+  if(Object.values(fuseConnected).every(v=>v)) {
+    // show proceed button in the fuseGame popup (or close and proceed)
+    closePopup('fuseGame');
+    openPopup('cabinetFinishPopup');
+  }
+}
+function indicatefuseWrong(){
+  document.getElementById('fuseMsg').innerText = "Incorrect — try again.";
+  const ansInput = document.getElementById('fuseAnswer');
+  ansInput.classList.add('shake');
+  setTimeout(()=>ansInput.classList.remove('shake'),600);
+}
+function cancelfuseAttempt(){
+  ongoingfuse = null;
+  closePopup('fusePuzzlePopup');
+}
+function lockfuseIntoSocket(fuseElem, socketElem, fuseIndex){
+  // visually move fuse text into socket; ensure fuse stays visible
+  socketElem.classList.add('connected');
+  socketElem.innerText = fuseElem.innerText;
+  fuseConnected[fuseIndex] = true;
+  // disable dragging
+  fuseElem.draggable = false;
+  fuseElem.style.opacity = 0.45;
+  fuseElem.style.cursor = 'default';
+  // attach data attribute to socket for later use if needed
+  socketElem.dataset.lockedfuse = fuseIndex;
+}
+
+/* ---------- Cabinet tables logic ---------- */
+/* Precomputed correct answers for left-hand questions.
+   We'll compute them or hardcode according to the problems described.
+   1) "Arithmetic Series 3,6,...,30" -> sum of that list (10 terms) = arithmetic sum:
+      a1=3, an=30, n=10 => S = n*(a1+an)/2 = 10*(3+30)/2 = 10*33/2 = 165
+   2) Sum first 6 terms when a1=2,d=3: a6 = 2 + (6-1)*3=17 => S=6*(2+17)/2 = 6*19/2=57
+   3) d=4,a1=4,a7 = a1+(7-1)*4 = 4+24=28
+   4) geometric r=3,a1=9, a5 = 9 * 3^(5-1) = 9 * 81 = 729
+   5) if a8 = 159 and d=25, then a8 = a1 + 7d => a1 = 159 - 7*25 = 159 - 175 = -16. Then a4 = a1 + 3d = -16 + 75 = 59
+   6) sum first 10 odd numbers -> first 10 odd numbers are 1..19 odd => sum = n^2 = 10^2 = 100
+   7) sum first 8 even numbers -> even numbers: 2,4,...,16 => sum = n(n+1) = 8*9 = 72
+   8) sum first 4 multiples of 5 => 5+10+15+20 = 50
+*/
+const cabinetCorrect = {
+  q1: 165, q2: 57, q3: 28, q4: 729, q5: 59, q6: 100, q7: 72, q8: 50
+};
+/* mapping from which correct numeric answer triggers which letter placement in the RIGHT table:
+   Based on the user's mapping in prompt:
+   When they got the right answer, the box will be replaced by permanent letter mapping:
+   q1 -> replace l5 with 'S' (165)
+   q2 -> replace l3 with 'N' (57)
+   q3 -> replace l6 with 'E' (28)
+   q4 -> replace l7 with 'E' (729)
+   q5 -> replace l4 with 'U' (59)
+   q6 -> replace l1 with 'Q' (100)
+   q7 -> replace l8 with 'C' (72)
+   q8 -> replace l2 with 'E' (50)
+*/
+const cabinetMapping = {
+  q1: 'l5', q2: 'l3', q3: 'l6', q4: 'l7', q5: 'l4', q6: 'l1', q7: 'l8', q8: 'l2'
+};
+const cabinetLetterForQuestion = {
+  q1: 'S', q2: 'N', q3: 'E', q4: 'E', q5: 'U', q6: 'Q', q7: 'C', q8: 'E'
+};
+
+function checkCabinetTable(){
+  // iterate and check
+  let allCorrect = true;
+  for(let i=1;i<=8;i++){
+    const id = 'q' + i;
+    const val = document.getElementById(id).value.trim();
+    if(val === '') { allCorrect = false; continue; }
+    // parse to number
+    const num = Number(val);
+    if(num === cabinetCorrect[id]){
+      // place permanent letter
+      const letterCell = cabinetMapping[id];
+      const letter = cabinetLetterForQuestion[id];
+      const target = document.getElementById(letterCell + 'cell') || document.getElementById(letterCell + 'cell');
+      // replace input with permanent letter visually
+      const inputElem = document.getElementById(letterCell);
+      if(inputElem){
+        inputElem.value = letter;
+        inputElem.disabled = true;
+        inputElem.style.background = 'rgba(255,255,255,0.03)';
+        inputElem.style.color = '#fff';
+        inputElem.style.fontWeight = 'bold';
+      }
+    } else {
+      allCorrect = false;
+      // show shake for that input
+      const inputElem = document.getElementById(id);
+      inputElem.classList.add('shake');
+      setTimeout(()=>inputElem.classList.remove('shake'),600);
+    }
+  }
+  const msg = document.getElementById('cabinetMsg');
+  if(allCorrect){
+    msg.innerText = "All numeric answers correct! Now fill the final word using the revealed letters.";
+    // disable question inputs
+    for(let i=1;i<=8;i++){ document.getElementById('q'+i).disabled = true; }
+  } else {
+    msg.innerText = "Some answers are incorrect or missing. Wrong inputs will shake.";
+  }
+}
+
+/* final word check for cabinet: required 'SEQUENCE' */
+function checkFinalWord(){
+  const val = document.getElementById('finalWord').value.trim().toUpperCase();
+  const msg = document.getElementById('cabinetMsg');
+  if(val === 'SEQUENCE'){
+    msg.innerText = "Correct! Cabinet yields a mini-booklet and a key.";
+    openPopup('cabinetFinishPopup');
+    // mark as done and allow proceed
+  } else {
+    // shake input
+    const el = document.getElementById('finalWord');
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'),600);
+    msg.innerText = "Wrong final word.";
+  }
+}
+
+/* ---------- Booklet & Safe sums logic ---------- */
+/* For the wheel / sums, user gave specific answers and mapping to symbols 1..9 */
+const sumsCorrect = {
+  sum1: 77,
+  sum2: 45,
+  sum3: 18,
+  sum4: 105,
+  sum5: 468,
+  sum6: 442,
+  sum7: 124,
+  sum8: 315,
+  sum9: 148
+};
+/* mapping numeric->symbol index */
+const sumToSymbol = {
+  77: 1, 45: 2, 18:3, 105:4, 468:5, 442:6, 124:7, 315:8, 148:9
+};
+/* symbol to animal mapping as described */
+const symbolToAnimal = {
+  1: 'horse', 2:'tiger', 3:'rat', 4:'snake', 5:'boar', 6:'ram', 7:'dragon', 8:'dog', 9:'hen'
+};
+/* the booklet pages (user-specified mapping of symbol->letter)
+  For the 1st Page, put the same symbol for the 'rat' then write big E
+  2nd Page -> hen -> M
+  3rd -> boar -> G
+  4th -> horse -> O
+  5th -> dog -> C
+  6th -> snake -> I
+  7th -> tiger -> T
+  8th -> dragon -> R
+  9th -> ram -> E
+  The booklet pages order (1..9) correspond to symbol index order 3,9,5,1,8,4,2,7,6 (rat,hen,boar,horse,dog,snake,tiger,dragon,ram)
+  The letters corresponding: E M G O C I T R E
+  The right final word after solving is GEOMETRIC (user says)
+*/
+const bookletPages = [
+  { symbol:'rat', letter:'O' },   // page 1
+  { symbol:'hen', letter:'C' },   // 2
+  { symbol:'boar', letter:'E' },  // 3
+  { symbol:'horse', letter:'G' }, // 4
+  { symbol:'dog', letter:'I' },   // 5
+  { symbol:'snake', letter:'M' }, // 6
+  { symbol:'tiger', letter:'E' }, // 7
+  { symbol:'dragon', letter:'R' },// 8
+  { symbol:'ram', letter:'T' }    // 9
+];
+let currentPageIndex = 0;
+
+/* display booklet page */
+function renderPage(idx){
+  const display = document.getElementById('pageDisplay');
+  const pg = bookletPages[idx];
+  display.innerHTML = `<div style="font-size:28px;opacity:0.8">${pg.symbol.toUpperCase()}</div><div style="font-size:84px;margin-top:8px">${pg.letter}</div>`;
+}
+function prevPage(){ if(currentPageIndex>0){ currentPageIndex--; renderPage(currentPageIndex); } }
+function nextPage(){ if(currentPageIndex<bookletPages.length-1){ currentPageIndex++; renderPage(currentPageIndex); } }
+
+/* check sums and map them to the wheel (replace input with symbol if correct) */
+function checkSums(){
+  let allCorrect = true;
+  for(let i=1;i<=9;i++){
+    const id = 'sum' + i;
+    const v = document.getElementById(id).value.trim();
+    if(v === '') { allCorrect = false; document.getElementById(id).classList.add('shake'); setTimeout(()=>document.getElementById(id).classList.remove('shake'),600); continue; }
+    const num = Number(v);
+    if(num === sumsCorrect[id]){
+      // replace input with symbol on the page (map the numeric to symbol index)
+      const symbolIndex = sumToSymbol[num];
+      // Put small symbol label in the wheel slot corresponding to that numeric mapping (we use mapping given earlier: numbers -> symbol index -> place 1..9)
+      // The user defined mapping 1->horse, 2->tiger... but we will place the animal icon text in the slot for index= symbolIndex.
+      // Find the slot with data-index = symbolIndex and place animal name
+      const slot = document.querySelector('.slot[data-index="'+symbolIndex+'"]');
+      if(slot) {
+        slot.innerText = symbolToAnimal[symbolIndex];
+      }
+      // disable input
+      document.getElementById(id).disabled = true;
+      document.getElementById(id).style.background = 'rgba(255,255,255,0.02)';
+    } else {
+      allCorrect = false;
+      const el = document.getElementById(id);
+      el.classList.add('shake');
+      setTimeout(()=>el.classList.remove('shake'),600);
+    }
+  }
+  if(allCorrect){
+    document.getElementById('safeMsg').innerText = "All sums correct! Now use the Mini Booklet to find the final word.";
+  } else {
+    document.getElementById('safeMsg').innerText = "Some sums incorrect. Wrong inputs shake.";
+  }
+}
+
+/* submit safe final word: must be GEOMETRIC */
+function submitSafeWord(){
+  const v = (document.getElementById('finalSafeWord').value || '').trim().toUpperCase();
+  if(v === 'GEOMETRIC'){
+    document.getElementById('safeMsg').innerText = "Correct! You've unlocked the puzzle box and found the key.";
+    closePopup('safePopup');
+    goToSection('ssection4');
+  } else {
+    const el = document.getElementById('finalSafeWord');
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'),600);
+    document.getElementById('safeMsg').innerText = "Wrong. Try again.";
+  }
+}
+
+/* ---------- Safe popup Booklet open on load ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderPage(0);
+  // Start at title
+  hideAllSections();
+  document.getElementById('section-title').classList.remove('hidden');
+});
+
+/* ---------- Final/Restart ---------- */
+function restartGame(){
+  window.location.reload();
+}
+
+/*-------- Sudoku Section ----------*/
+// Predefined valid 6x6 grid with 3x3 quadrants
+const solution = [
+  [1,2,3,4,5,6],
+  [4,5,6,1,2,3],
+  [2,3,1,5,6,4],
+  [5,6,4,2,3,1],
+  [3,1,2,6,4,5],
+  [6,4,5,3,1,2]
+];
+
+// Randomly remove 9 cells for blanks
+let blanks = [];
+while (blanks.length < 9) {
+  let r = Math.floor(Math.random() * 6);
+  let c = Math.floor(Math.random() * 6);
+  let key = r + "-" + c;
+  if (!blanks.includes(key)) blanks.push(key);
+}
+
+const table = document.getElementById("sudokuTable");
+
+for (let i = 0; i < 6; i++) {
+  let tr = document.createElement("tr");
+  for (let j = 0; j < 6; j++) {
+    let td = document.createElement("td");
+    // Add quadrant borders
+    if (j === 2) td.classList.add("quad-right");
+    if (i === 2) td.classList.add("quad-bottom");
+
+    if (blanks.includes(i + "-" + j)) {
+      let input = document.createElement("input");
+      input.setAttribute("type", "text");
+      input.setAttribute("maxlength", "1");
+      input.dataset.row = i;
+      input.dataset.col = j;
+      input.addEventListener("input", (e) => {
+        let val = e.target.value;
+        if (!/^[1-6]$/.test(val)) e.target.value = "";
+      });
+      td.appendChild(input);
+    } else {
+      td.textContent = solution[i][j];
+    }
+    tr.appendChild(td);
+  }
+  table.appendChild(tr);
+}
+
+function checkSolution() {
+  let valid = true;
+
+  // Helper to get quadrant indices
+  function getQuadrant(r,c) {
+    let quadRow = r < 3 ? 0 : 1;
+    let quadCol = c < 3 ? 0 : 1;
+    return {quadRow, quadCol};
+  }
+
+  const inputs = document.querySelectorAll("input");
+  for (let input of inputs) {
+    let val = parseInt(input.value);
+    let r = parseInt(input.dataset.row);
+    let c = parseInt(input.dataset.col);
+    if (!val || val < 1 || val > 6) valid = false;
+
+    // Check row
+    for (let i = 0; i < 6; i++) {
+      if (i !== c) {
+        let cell = document.querySelector(`tr:nth-child(${r+1}) td:nth-child(${i+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+    // Check column
+    for (let i = 0; i < 6; i++) {
+      if (i !== r) {
+        let cell = document.querySelector(`tr:nth-child(${i+1}) td:nth-child(${c+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+    // Check quadrant
+    let {quadRow, quadCol} = getQuadrant(r,c);
+    for (let i = quadRow*3; i < quadRow*3+3; i++) {
+      for (let j = quadCol*3; j < quadCol*3+3; j++) {
+        if (i===r && j===c) continue;
+        let cell = document.querySelector(`tr:nth-child(${i+1}) td:nth-child(${j+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+  }
+
+  if (valid) alert("Congratulations! Your solution is valid.");
+  else alert("There are errors in your solution. Check rows, columns, and quadrants.");
+}
+
+/* Accessibility note: Close popups with ESC */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.popup').forEach(p=>p.style.display='none');
+  }
+});
+
+</script>
+</body>
+</html>

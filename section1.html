@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Math Escape Room Project</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blood-red: #8B0000;
+    --blood-glow: rgba(200,0,0,0.6);
+    --dark-bg: #050505;
+    --panel-bg: rgba(0,0,0,0.7);
+    --accent: #FF3B3B;
+  }
+  html,body { height:100%; margin:0; font-family: Arial, Helvetica, sans-serif; background:#000; color:#eee; background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8NDw8PDw0NDQ8NDQ0PDQ8NDQ0NFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKBQYGDg8PDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAN8A4gMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAHRABAQEAAQUBAAAAAAAAAAAAAAERIRJBgZGhAv/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDi4oCAuAgYYAACgAAABUAABFQBRAFQAAAAAAANBAaAAVAFA0AABUAAAQABAAAAAoAQADQAAAABFQFABRFAVAFEUAAAEARUAEAUQBRAFEUEqooAgAABoYAoAAAKIoAAKAAgAgAIAAAAAAKgAAAqABAAAFEUAQBVQBRFAVFBAQAAEFQAAAAAABUAVAAAAFwBBUBRFABQAAURQSzvnFtkucWzNn2e4i1AAAEVAAAAAAAAAAAFRQQMAUAEFQFABRFAVAEAAAARUACgAAAAAKCKgCiAAoCC4YCC4vSDKr0mAgqggoDI1YyAACAAAAAAAAEAAABUUAAGhABUAVAAABRAFSxQGRbEBAAVBQQAAAAAFQAAANFAUQBQAAAAAAAURQGbGkBkWxAAAVAAAABQQAAAF0TQFEUAABUAVABQAAUAABmxoBgLAAAAAAAAFBCqgHgMAUwAAAAAAAFQBVZUBUUACAWMVswGAAAAAAUQBUIoCLiAoigAoIKAiiAqKgKIoCoAKigAAljLafqAyAAAAAAEUBFAAICgACAAKAAAAAqAKCaCkAAAEsZbZsBAAAAFQBUAH//Z"); background-size: cover; background-position: center;}
+  body { overflow:hidden; }
+
+  /* Fullscreen background image container per section */
+  .bg {
+    position:fixed; inset:0; z-index:-100; background-size:cover; background-position:center; transition: background 0.7s ease;
+    filter: brightness(0.5);
+  }
+
+  /* central stage */
+  .stage {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    box-sizing:border-box;
+  }
+
+  .card {
+    width:92%;
+    max-width:960px;
+    background: var(--panel-bg);
+    border-radius:14px;
+    padding:22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,0,0,0.03);
+    color: #fff;
+  }
+
+  /* Scary bloody headers */
+  h1.title {
+    font-family: 'Creepster', cursive;
+    color: var(--accent);
+    font-size:48px;
+    margin:6px 0 4px 0;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.9), 0 0 14px rgba(255,0,0,0.25);
+    letter-spacing:1px;
+  }
+  h2, h3 {
+    font-family: 'Nosifer', cursive, 'Creepster', cursive;
+    color: var(--accent);
+    text-shadow: 0 3px 6px rgba(0,0,0,0.9);
+    margin:8px 0;
+  }
+  p.lead {
+    font-size:18px;
+    color:#f1e7e7;
+    line-height:1.4;
+  }
+
+  /* Bloody buttons */
+  .bloody-btn {
+    display:inline-block;
+    padding:12px 22px;
+    margin:12px 8px 0 8px;
+    border-radius:10px;
+    background: linear-gradient(180deg,#550000 0%, #120000 100%);
+    border: 2px solid #8b0000;
+    box-shadow: 0 6px 25px rgba(139,0,0,0.45), inset 0 -6px 12px rgba(255,0,0,0.08);
+    color:#fff;
+    font-family: 'Creepster', cursive;
+    font-size:18px;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .bloody-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(255,0,0,0.45); }
+
+  /* Popups in bloody bubble frame */
+  .popup {
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    z-index: 9999;
+    background: linear-gradient(180deg, rgba(10,10,10,0.98), rgba(0,0,0,0.9));
+    border-radius: 18px;
+    border: 6px solid rgba(100,0,0,0.9);
+    padding: 18px;
+    width: min(880px, 90%);
+    max-height: 80%;
+    overflow:auto;
+    display:none;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.9), 0 0 60px rgba(139,0,0,0.12);
+  }
+  .popup .bubble {
+    background: rgba(20,0,0,0.55);
+    border-radius: 12px;
+    padding: 12px;
+    color: #fff;
+    border: 2px solid rgba(255,0,0,0.12);
+    font-size:18px;
+  }
+  .popup h3 { font-family:'Creepster', cursive; color:var(--accent); margin:0 0 8px 0; }
+
+  /* Small utility */
+  .hidden { display:none !important; }
+  .center { text-align:center; }
+
+  /* Section headers animation */
+  .animated-header { opacity:0; transform: translateY(20px); transition: all 0.6s ease; }
+  .animated-header.show { opacity:1; transform: translateY(0); }
+
+  /* fuse mini-game layout */
+  .mini-game {
+    display:flex; gap:18px; align-items:flex-start; justify-content:center; flex-wrap:wrap;
+  }
+  .fuses-area, .sockets-area {
+    width:420px;
+    min-height:220px;
+    border-radius:12px;
+    padding:12px;
+    background: rgba(0,0,0,0.44);
+    border: 2px dashed rgba(255,0,0,0.08);
+  }
+  .fuse {
+    width:160px;
+    height:28px;
+    line-height:28px;
+    margin:10px;
+    border-radius:6px;
+    padding-left:10px;
+    color:#fff;
+    font-weight:bold;
+    cursor:grab;
+    user-select:none;
+  }
+  .socket {
+    width:180px; height:28px; border-radius:6px; margin:15px; background:rgba(255,255,255,0.04);
+    border:2px solid rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center;
+    color:#ddd; font-weight:bold;
+  }
+  .fuse.red { background: linear-gradient(90deg, #a30000, #7b0000); box-shadow: 0 6px 20px rgba(163,0,0,0.2); }
+  .fuse.green { background: linear-gradient(90deg, #0f7b1a, #075e12); box-shadow: 0 6px 20px rgba(0,150,50,0.15); }
+  .fuse.blue { background: linear-gradient(90deg, #0b4f7b, #05324c); box-shadow: 0 6px 20px rgba(0,120,200,0.12); }
+  .fuse.yellow { background: linear-gradient(90deg, #8b6b00, #6b4d00); box-shadow: 0 6px 20px rgba(200,160,0,0.12); }
+  .fuse.purple { background: linear-gradient(90deg, #5b0d5b, #3a063a); box-shadow: 0 6px 20px rgba(120,40,120,0.12); }
+
+  /* connected state */
+  .socket.connected { background: rgba(255,255,255,0.06); border-color: rgba(0,255,0,0.15); color: #e0ffd8; }
+
+  /* table puzzle */
+  .puzzle-table { width:100%; border-collapse:collapse; margin-top:12px; }
+  .puzzle-table td, .puzzle-table th { padding:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.45); color:#fff; }
+  .puzzle-table input[type="text"] { width:100%; padding:6px; font-size:16px; border-radius:6px; border:2px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff; }
+  .small { font-size:14px; color:#ddd; }
+
+  /* shaking animation for wrong answers */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+  }
+  .shake { animation: shake 0.6s; }
+
+  /* booklet */
+  .booklet { display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .book {
+    width:320px; height:340px; background:linear-gradient(180deg,#1a0b0b,#0c0505); border-radius:10px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:4px solid rgba(120,0,0,0.6);
+  }
+  .page {
+    width:280px; height:240px; background: rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; flex-direction:column; border-radius:8px;
+    color:#fff; font-size:40px; font-family:'Creepster', cursive; text-shadow:0 2px 8px rgba(0,0,0,0.9);
+  }
+  .book-controls { display:flex; gap:8px; margin-top:8px; }
+
+  /* wheel safe */
+  .wheel-wrap { display:flex; gap:24px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .wheel {
+    width:260px; height:260px; border-radius:50%; background: linear-gradient(180deg,#0b0b0b,#1a0b0b); border:6px solid rgba(80,0,0,0.6); position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wheel .slot { position:absolute; width:72px; height:72px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; border-radius:8px; background: rgba(255,255,255,0.02); border:2px solid rgba(255,255,255,0.04); }
+  /* place 9 slots around circle */
+  .s1 { transform: translate(-130px,-0px); left:50%; top:50%; }
+  .s2 { transform: translate(-90px,-95px); left:50%; top:50%; }
+  .s3 { transform: translate(-10px,-125px); left:50%; top:50%; }
+  .s4 { transform: translate(70px,-95px); left:50%; top:50%; }
+  .s5 { transform: translate(110px,0px); left:50%; top:50%; }
+  .s6 { transform: translate(70px,95px); left:50%; top:50%; }
+  .s7 { transform: translate(-10px,125px); left:50%; top:50%; }
+  .s8 { transform: translate(-90px,95px); left:50%; top:50%; }
+  .s9 { transform: translate(-150px,60px); left:50%; top:50%; }
+
+  /* responsive tweaks */
+  @media (max-width:900px){
+    .fuse, .socket { width:120px; }
+    .fuses-area, .sockets-area { width: 95%; }
+    .card { width:95%; padding:16px; }
+    .wheel { width:210px; height:210px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bg" class="bg" );"></div>
+
+<div class="stage">
+  <div id="mainCard" class="card">
+    <!-- Section 1 animated header -->
+      <div class="left"><button class="bloody-btn" onclick="window.location.href ='intro2.html'">&larr;</button></div>
+      <h2 id="animatedH" class="animated-header">Section 1: This is where the fun starts.</h2>
+      <p class="lead">There are no lights at the house, maybe there is a breaker at the basement.</p>
+      <p class="lead">Thankfully, you have emergency flashlight that can use to find the basement. But it seems like it will not last</p>
+      <div class="center"><button class="bloody-btn" onclick="window.location.href ='basement.html'">Proceed</button></div>
+    </div>
+</div>
+
+<script>
+/* ---------- Global state ---------- */
+let currentSection = 'title';
+const bg = document.getElementById('bg');
+
+/* helper to change visible section and background */
+function hideAllSections(){
+  document.querySelectorAll('#mainCard > div').forEach(d => d.classList.add('hidden'));
+}
+function goToSection(id){
+  hideAllSections();
+  document.getElementById(id).classList.remove('hidden');
+  currentSection = id;
+  // change background per section
+  switch(id){
+    case 'intro1': bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+    case 'intro2': bg.style.backgroundImage = "url('https://i.ibb.co/Z6b0rZb/abandoned-door.jpg')"; break;
+    case 'afterLock': bg.style.backgroundImage = "url('https://i.ibb.co/Mc8fK0n/wooden-door.jpg')"; break;
+    case 'section1': bg.style.backgroundImage = "url('https://i.ibb.co/9yqkP8V/low-light-entrance.jpg')"; setTimeout(()=>document.getElementById('animatedH').classList.add('show'),150); break;
+    case 'basementIntro': bg.style.backgroundImage = "url('https://i.ibb.co/9H0sG4Y/basement.jpg')"; break;
+    case 'postfuses': bg.style.backgroundImage = "url('https://i.ibb.co/qkSJQ9t/basement-lit.jpg')"; break;
+    case 'cabinetIntro': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetPuzzle': bg.style.backgroundImage = "url('https://i.ibb.co/jkJ7TzP/cabinet.jpg')"; break;
+    case 'cabinetAfter': bg.style.backgroundImage = "url('https://i.ibb.co/8K5Qy3G/cabinet-open.jpg')"; break;
+    case 'upstairs': bg.style.backgroundImage = "url('https://i.ibb.co/7W7yV6s/hallway.jpg')"; break;
+    default: bg.style.backgroundImage = "url('https://i.ibb.co/wwf3sMb/haunted-house.jpg')"; break;
+  }
+}
+
+/* popup control */
+function openPopup(id){ document.getElementById(id).style.display = 'block'; }
+function closePopup(id){ document.getElementById(id).style.display = 'none'; }
+
+/* ---------- LOCK logic ---------- */
+function lockWrong(msg){
+  closePopup('lockPopup');
+  document.getElementById('lockWrongMsg').innerText = msg;
+  openPopup('lockWrongPopup');
+}
+function lockRight(){
+  closePopup('lockPopup');
+  openPopup('lockRightPopup');
+}
+function proceedAfterLock(){
+  closePopup('lockRightPopup');
+  goToSection('afterLock');
+}
+
+/* ---------- fuse drag & mini puzzles ---------- */
+/* map fuse index to puzzle prompt + answers */
+const fusePuzzles = {
+  1: { prompt: "2, 4, _, _, 32. Type the missing two numbers separated by comma", answers: ["8","16"] },
+  2: { prompt: "1, 3, 5, 7, _, _, _. Type the missing three numbers separated by comma", answers: ["9","11","13"] },
+  3: { prompt: "7, 14, 21, _, 35, 42, _. Type the two missing numbers separated by comma", answers: ["28","49"] },
+  4: { prompt: "3, 9, _, _, 243. Type the two missing numbers separated by comma", answers: ["27","81"] },
+  5: { prompt: "81, 72, 63, _, _. Type the two missing numbers separated by comma", answers: ["54","45"] }
+};
+let fuseConnected = { 1:false,2:false,3:false,4:false,5:false };
+
+/* Setup drag events */
+document.querySelectorAll('.fuse').forEach(w=>{
+  w.addEventListener('dragstart', e=>{
+    e.dataTransfer.setData('text/plain', e.target.id);
+  });
+});
+document.querySelectorAll('.socket').forEach(s=>{
+  s.addEventListener('dragover', e=>{
+    e.preventDefault();
+  });
+  s.addEventListener('drop', e=>{
+    e.preventDefault();
+    const fuseId = e.dataTransfer.getData('text/plain');
+    const fuseElem = document.getElementById(fuseId);
+    const socketIndex = e.currentTarget.dataset.socket;
+    // reject if already connected
+    if(e.currentTarget.classList.contains('connected')) return;
+    // show mini puzzle for that fuse
+    const fuseIndex = parseInt(fuseElem.dataset.fuse,10);
+    // start puzzle attempt
+    startfusePuzzle(fuseIndex, socketIndex, fuseElem, e.currentTarget);
+  });
+});
+
+/* fuse puzzle flow */
+let ongoingfuse = null;
+function startfusePuzzle(fuseIndex, socketIndex, fuseElem, socketElem){
+  if(fuseConnected[fuseIndex]) {
+    // already solved
+    return;
+  }
+  ongoingfuse = { fuseIndex, socketIndex, fuseElem, socketElem };
+  const puz = fusePuzzles[fuseIndex];
+  document.getElementById('fusePuzzleTitle').innerText = "Mini Puzzle for fuse " + fuseIndex;
+  document.getElementById('fusePuzzleBody').innerText = puz.prompt;
+  document.getElementById('fuseAnswer').value = '';
+  document.getElementById('fuseMsg').innerText = '';
+  openPopup('fusePuzzlePopup');
+}
+
+/* submit fuse answer */
+function submitfuseAnswer(){
+  const ans = document.getElementById('fuseAnswer').value.trim();
+  if(!ongoingfuse) return;
+  const expected = fusePuzzles[ongoingfuse.fuseIndex].answers;
+  // normalize: split and trim
+  const provided = ans.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+  // require same length and exact numbers
+  if(provided.length !== expected.length){
+    indicatefuseWrong();
+    return;
+  }
+  // check each element numeric equality
+  let ok = true;
+  for(let i=0;i<expected.length;i++){
+    if(provided[i] !== expected[i]) { ok = false; break; }
+  }
+  if(!ok){
+    indicatefuseWrong();
+    return;
+  }
+  // correct: lock fuse in socket
+  closePopup('fusePuzzlePopup');
+  lockfuseIntoSocket(ongoingfuse.fuseElem, ongoingfuse.socketElem, ongoingfuse.fuseIndex);
+  ongoingfuse = null;
+  // check if all fuses connected
+  if(Object.values(fuseConnected).every(v=>v)) {
+    // show proceed button in the fuseGame popup (or close and proceed)
+    closePopup('fuseGame');
+    openPopup('cabinetFinishPopup');
+  }
+}
+function indicatefuseWrong(){
+  document.getElementById('fuseMsg').innerText = "Incorrect — try again.";
+  const ansInput = document.getElementById('fuseAnswer');
+  ansInput.classList.add('shake');
+  setTimeout(()=>ansInput.classList.remove('shake'),600);
+}
+function cancelfuseAttempt(){
+  ongoingfuse = null;
+  closePopup('fusePuzzlePopup');
+}
+function lockfuseIntoSocket(fuseElem, socketElem, fuseIndex){
+  // visually move fuse text into socket; ensure fuse stays visible
+  socketElem.classList.add('connected');
+  socketElem.innerText = fuseElem.innerText;
+  fuseConnected[fuseIndex] = true;
+  // disable dragging
+  fuseElem.draggable = false;
+  fuseElem.style.opacity = 0.45;
+  fuseElem.style.cursor = 'default';
+  // attach data attribute to socket for later use if needed
+  socketElem.dataset.lockedfuse = fuseIndex;
+}
+
+/* ---------- Cabinet tables logic ---------- */
+/* Precomputed correct answers for left-hand questions.
+   We'll compute them or hardcode according to the problems described.
+   1) "Arithmetic Series 3,6,...,30" -> sum of that list (10 terms) = arithmetic sum:
+      a1=3, an=30, n=10 => S = n*(a1+an)/2 = 10*(3+30)/2 = 10*33/2 = 165
+   2) Sum first 6 terms when a1=2,d=3: a6 = 2 + (6-1)*3=17 => S=6*(2+17)/2 = 6*19/2=57
+   3) d=4,a1=4,a7 = a1+(7-1)*4 = 4+24=28
+   4) geometric r=3,a1=9, a5 = 9 * 3^(5-1) = 9 * 81 = 729
+   5) if a8 = 159 and d=25, then a8 = a1 + 7d => a1 = 159 - 7*25 = 159 - 175 = -16. Then a4 = a1 + 3d = -16 + 75 = 59
+   6) sum first 10 odd numbers -> first 10 odd numbers are 1..19 odd => sum = n^2 = 10^2 = 100
+   7) sum first 8 even numbers -> even numbers: 2,4,...,16 => sum = n(n+1) = 8*9 = 72
+   8) sum first 4 multiples of 5 => 5+10+15+20 = 50
+*/
+const cabinetCorrect = {
+  q1: 165, q2: 57, q3: 28, q4: 729, q5: 59, q6: 100, q7: 72, q8: 50
+};
+/* mapping from which correct numeric answer triggers which letter placement in the RIGHT table:
+   Based on the user's mapping in prompt:
+   When they got the right answer, the box will be replaced by permanent letter mapping:
+   q1 -> replace l5 with 'S' (165)
+   q2 -> replace l3 with 'N' (57)
+   q3 -> replace l6 with 'E' (28)
+   q4 -> replace l7 with 'E' (729)
+   q5 -> replace l4 with 'U' (59)
+   q6 -> replace l1 with 'Q' (100)
+   q7 -> replace l8 with 'C' (72)
+   q8 -> replace l2 with 'E' (50)
+*/
+const cabinetMapping = {
+  q1: 'l5', q2: 'l3', q3: 'l6', q4: 'l7', q5: 'l4', q6: 'l1', q7: 'l8', q8: 'l2'
+};
+const cabinetLetterForQuestion = {
+  q1: 'S', q2: 'N', q3: 'E', q4: 'E', q5: 'U', q6: 'Q', q7: 'C', q8: 'E'
+};
+
+function checkCabinetTable(){
+  // iterate and check
+  let allCorrect = true;
+  for(let i=1;i<=8;i++){
+    const id = 'q' + i;
+    const val = document.getElementById(id).value.trim();
+    if(val === '') { allCorrect = false; continue; }
+    // parse to number
+    const num = Number(val);
+    if(num === cabinetCorrect[id]){
+      // place permanent letter
+      const letterCell = cabinetMapping[id];
+      const letter = cabinetLetterForQuestion[id];
+      const target = document.getElementById(letterCell + 'cell') || document.getElementById(letterCell + 'cell');
+      // replace input with permanent letter visually
+      const inputElem = document.getElementById(letterCell);
+      if(inputElem){
+        inputElem.value = letter;
+        inputElem.disabled = true;
+        inputElem.style.background = 'rgba(255,255,255,0.03)';
+        inputElem.style.color = '#fff';
+        inputElem.style.fontWeight = 'bold';
+      }
+    } else {
+      allCorrect = false;
+      // show shake for that input
+      const inputElem = document.getElementById(id);
+      inputElem.classList.add('shake');
+      setTimeout(()=>inputElem.classList.remove('shake'),600);
+    }
+  }
+  const msg = document.getElementById('cabinetMsg');
+  if(allCorrect){
+    msg.innerText = "All numeric answers correct! Now fill the final word using the revealed letters.";
+    // disable question inputs
+    for(let i=1;i<=8;i++){ document.getElementById('q'+i).disabled = true; }
+  } else {
+    msg.innerText = "Some answers are incorrect or missing. Wrong inputs will shake.";
+  }
+}
+
+/* final word check for cabinet: required 'SEQUENCE' */
+function checkFinalWord(){
+  const val = document.getElementById('finalWord').value.trim().toUpperCase();
+  const msg = document.getElementById('cabinetMsg');
+  if(val === 'SEQUENCE'){
+    msg.innerText = "Correct! Cabinet yields a mini-booklet and a key.";
+    openPopup('cabinetFinishPopup');
+    // mark as done and allow proceed
+  } else {
+    // shake input
+    const el = document.getElementById('finalWord');
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'),600);
+    msg.innerText = "Wrong final word.";
+  }
+}
+
+/* ---------- Booklet & Safe sums logic ---------- */
+/* For the wheel / sums, user gave specific answers and mapping to symbols 1..9 */
+const sumsCorrect = {
+  sum1: 77,
+  sum2: 45,
+  sum3: 18,
+  sum4: 105,
+  sum5: 468,
+  sum6: 442,
+  sum7: 124,
+  sum8: 315,
+  sum9: 148
+};
+/* mapping numeric->symbol index */
+const sumToSymbol = {
+  77: 1, 45: 2, 18:3, 105:4, 468:5, 442:6, 124:7, 315:8, 148:9
+};
+/* symbol to animal mapping as described */
+const symbolToAnimal = {
+  1: 'horse', 2:'tiger', 3:'rat', 4:'snake', 5:'boar', 6:'ram', 7:'dragon', 8:'dog', 9:'hen'
+};
+/* the booklet pages (user-specified mapping of symbol->letter)
+  For the 1st Page, put the same symbol for the 'rat' then write big E
+  2nd Page -> hen -> M
+  3rd -> boar -> G
+  4th -> horse -> O
+  5th -> dog -> C
+  6th -> snake -> I
+  7th -> tiger -> T
+  8th -> dragon -> R
+  9th -> ram -> E
+  The booklet pages order (1..9) correspond to symbol index order 3,9,5,1,8,4,2,7,6 (rat,hen,boar,horse,dog,snake,tiger,dragon,ram)
+  The letters corresponding: E M G O C I T R E
+  The right final word after solving is GEOMETRIC (user says)
+*/
+const bookletPages = [
+  { symbol:'rat', letter:'O' },   // page 1
+  { symbol:'hen', letter:'C' },   // 2
+  { symbol:'boar', letter:'E' },  // 3
+  { symbol:'horse', letter:'G' }, // 4
+  { symbol:'dog', letter:'I' },   // 5
+  { symbol:'snake', letter:'M' }, // 6
+  { symbol:'tiger', letter:'E' }, // 7
+  { symbol:'dragon', letter:'R' },// 8
+  { symbol:'ram', letter:'T' }    // 9
+];
+let currentPageIndex = 0;
+
+/* display booklet page */
+function renderPage(idx){
+  const display = document.getElementById('pageDisplay');
+  const pg = bookletPages[idx];
+  display.innerHTML = `<div style="font-size:28px;opacity:0.8">${pg.symbol.toUpperCase()}</div><div style="font-size:84px;margin-top:8px">${pg.letter}</div>`;
+}
+function prevPage(){ if(currentPageIndex>0){ currentPageIndex--; renderPage(currentPageIndex); } }
+function nextPage(){ if(currentPageIndex<bookletPages.length-1){ currentPageIndex++; renderPage(currentPageIndex); } }
+
+/* check sums and map them to the wheel (replace input with symbol if correct) */
+function checkSums(){
+  let allCorrect = true;
+  for(let i=1;i<=9;i++){
+    const id = 'sum' + i;
+    const v = document.getElementById(id).value.trim();
+    if(v === '') { allCorrect = false; document.getElementById(id).classList.add('shake'); setTimeout(()=>document.getElementById(id).classList.remove('shake'),600); continue; }
+    const num = Number(v);
+    if(num === sumsCorrect[id]){
+      // replace input with symbol on the page (map the numeric to symbol index)
+      const symbolIndex = sumToSymbol[num];
+      // Put small symbol label in the wheel slot corresponding to that numeric mapping (we use mapping given earlier: numbers -> symbol index -> place 1..9)
+      // The user defined mapping 1->horse, 2->tiger... but we will place the animal icon text in the slot for index= symbolIndex.
+      // Find the slot with data-index = symbolIndex and place animal name
+      const slot = document.querySelector('.slot[data-index="'+symbolIndex+'"]');
+      if(slot) {
+        slot.innerText = symbolToAnimal[symbolIndex];
+      }
+      // disable input
+      document.getElementById(id).disabled = true;
+      document.getElementById(id).style.background = 'rgba(255,255,255,0.02)';
+    } else {
+      allCorrect = false;
+      const el = document.getElementById(id);
+      el.classList.add('shake');
+      setTimeout(()=>el.classList.remove('shake'),600);
+    }
+  }
+  if(allCorrect){
+    document.getElementById('safeMsg').innerText = "All sums correct! Now use the Mini Booklet to find the final word.";
+  } else {
+    document.getElementById('safeMsg').innerText = "Some sums incorrect. Wrong inputs shake.";
+  }
+}
+
+/* submit safe final word: must be GEOMETRIC */
+function submitSafeWord(){
+  const v = (document.getElementById('finalSafeWord').value || '').trim().toUpperCase();
+  if(v === 'GEOMETRIC'){
+    document.getElementById('safeMsg').innerText = "Correct! You've unlocked the puzzle box and found the key.";
+    closePopup('safePopup');
+    goToSection('ssection4');
+  } else {
+    const el = document.getElementById('finalSafeWord');
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'),600);
+    document.getElementById('safeMsg').innerText = "Wrong. Try again.";
+  }
+}
+
+/* ---------- Safe popup Booklet open on load ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderPage(0);
+  // Start at title
+  hideAllSections();
+  document.getElementById('section-title').classList.remove('hidden');
+});
+
+/* ---------- Final/Restart ---------- */
+function restartGame(){
+  window.location.reload();
+}
+
+/*-------- Sudoku Section ----------*/
+// Predefined valid 6x6 grid with 3x3 quadrants
+const solution = [
+  [1,2,3,4,5,6],
+  [4,5,6,1,2,3],
+  [2,3,1,5,6,4],
+  [5,6,4,2,3,1],
+  [3,1,2,6,4,5],
+  [6,4,5,3,1,2]
+];
+
+// Randomly remove 9 cells for blanks
+let blanks = [];
+while (blanks.length < 9) {
+  let r = Math.floor(Math.random() * 6);
+  let c = Math.floor(Math.random() * 6);
+  let key = r + "-" + c;
+  if (!blanks.includes(key)) blanks.push(key);
+}
+
+const table = document.getElementById("sudokuTable");
+
+for (let i = 0; i < 6; i++) {
+  let tr = document.createElement("tr");
+  for (let j = 0; j < 6; j++) {
+    let td = document.createElement("td");
+    // Add quadrant borders
+    if (j === 2) td.classList.add("quad-right");
+    if (i === 2) td.classList.add("quad-bottom");
+
+    if (blanks.includes(i + "-" + j)) {
+      let input = document.createElement("input");
+      input.setAttribute("type", "text");
+      input.setAttribute("maxlength", "1");
+      input.dataset.row = i;
+      input.dataset.col = j;
+      input.addEventListener("input", (e) => {
+        let val = e.target.value;
+        if (!/^[1-6]$/.test(val)) e.target.value = "";
+      });
+      td.appendChild(input);
+    } else {
+      td.textContent = solution[i][j];
+    }
+    tr.appendChild(td);
+  }
+  table.appendChild(tr);
+}
+
+function checkSolution() {
+  let valid = true;
+
+  // Helper to get quadrant indices
+  function getQuadrant(r,c) {
+    let quadRow = r < 3 ? 0 : 1;
+    let quadCol = c < 3 ? 0 : 1;
+    return {quadRow, quadCol};
+  }
+
+  const inputs = document.querySelectorAll("input");
+  for (let input of inputs) {
+    let val = parseInt(input.value);
+    let r = parseInt(input.dataset.row);
+    let c = parseInt(input.dataset.col);
+    if (!val || val < 1 || val > 6) valid = false;
+
+    // Check row
+    for (let i = 0; i < 6; i++) {
+      if (i !== c) {
+        let cell = document.querySelector(`tr:nth-child(${r+1}) td:nth-child(${i+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+    // Check column
+    for (let i = 0; i < 6; i++) {
+      if (i !== r) {
+        let cell = document.querySelector(`tr:nth-child(${i+1}) td:nth-child(${c+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+    // Check quadrant
+    let {quadRow, quadCol} = getQuadrant(r,c);
+    for (let i = quadRow*3; i < quadRow*3+3; i++) {
+      for (let j = quadCol*3; j < quadCol*3+3; j++) {
+        if (i===r && j===c) continue;
+        let cell = document.querySelector(`tr:nth-child(${i+1}) td:nth-child(${j+1}) input`);
+        if (cell && parseInt(cell.value) === val) valid = false;
+      }
+    }
+  }
+
+  if (valid) alert("Congratulations! Your solution is valid.");
+  else alert("There are errors in your solution. Check rows, columns, and quadrants.");
+}
+
+/* Accessibility note: Close popups with ESC */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.popup').forEach(p=>p.style.display='none');
+  }
+});
+
+</script>
+</body>
+</html>
